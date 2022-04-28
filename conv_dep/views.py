@@ -5,18 +5,18 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from conv_dep.models import Utterances, UtrsIds
-from conv_dep.serializer import ConvDepSerializer, ConvDepIdSerializer
+# from conv_dep.models import Convs
+# from conv_dep.serializer import ConvDepSerializer, ConvDepIdSerializer
 
 
-class ConvDepViewSet(viewsets.ModelViewSet):
-    queryset = Utterances.objects.all()
-    serializer_class = ConvDepSerializer
+# class ConvDepViewSet(viewsets.ModelViewSet):
+#     queryset = Utterances.objects.all()
+#     serializer_class = ConvDepSerializer
 
 
-class ConvDepIdsViewSet(viewsets.ModelViewSet):
-    queryset = UtrsIds.objects.all()
-    serializer_class = ConvDepIdSerializer
+# class ConvDepIdsViewSet(viewsets.ModelViewSet):
+#     queryset = UtrsIds.objects.all()
+#     serializer_class = ConvDepIdSerializer
 
 
 # @api_view(['GET'])
