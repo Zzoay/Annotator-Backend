@@ -6,8 +6,8 @@ from conv_dep import views
 
 
 router = DefaultRouter()
-# router.register('conv_dep', views.ConvDepViewSet)
-# router.register('conv_dep_ids', views.ConvDepIdsViewSet)
+router.register('conv_dep', views.ConvDepViewSet)
+router.register('conv_dep_ids', views.ConvDepIdsViewSet)
 
 
 urlpatterns = [
