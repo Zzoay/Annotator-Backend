@@ -1,13 +1,13 @@
 import re
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 
-from conv_dep.models import Utterance, Conv
-from conv_dep.serializer import ConvDepSerializer, ConvDepIdSerializer
+from conv_dep.models import Utterance, Conv, Relation, Relationship
+from conv_dep.serializer import ConvDepSerializer, ConvDepIdSerializer, RelationSerializer, RelationshipSerializer
 
 
 class ConvDepViewSet(viewsets.ModelViewSet):
@@ -41,10 +41,29 @@ class ConvDepIdsViewSet(viewsets.ModelViewSet):
     queryset = Conv.objects.all()
     serializer_class = ConvDepIdSerializer
 
-    # def list(self, request, *args, **kwargs):
-    #     serializer = self.serializer_class(self.queryset, many=True)
-    #     res_lst = []
-    #     for d in serializer.data:
-    #         res_lst.append({
-    #         })
-    #     return Response(res_lst)
+    def list(self, request, *args, **kwargs):
+        serializer = self.serializer_class(self.queryset, many=True)
+        return Response(serializer.data[0])  # 返回第一个
+
+
+class RelationViewSet(viewsets.ModelViewSet):
+    queryset = Relation.objects.all()
+    serializer_class = RelationSerializer
+
+
+
+class RelationshipViewSet(viewsets.ModelViewSet):
+    queryset = Relationship.objects.all()
+    serializer_class = RelationshipSerializer
+
+    def list(self, request, *args, **kwargs):
+        conv_id = request.query_params.get('convId', None)
+        queryset = self.queryset.filter(conv=conv_id) 
+        serializer = self.serializer_class(queryset, many=True)
+
+        return Response(serializer.data)
+    
+    def update(self, instance, validated_data):
+        instance.relation = validated_data['relation']
+        instance.save()
+        return instance

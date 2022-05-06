@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 
-from conv_dep.models import Utterance, Conv
+from conv_dep.models import Utterance, Conv, Relation, Relationship
 
 
 class ConvDepSerializer(serializers.ModelSerializer):
@@ -15,4 +15,16 @@ class ConvDepSerializer(serializers.ModelSerializer):
 class ConvDepIdSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conv
+        fields = '__all__'
+
+
+class RelationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Relation
+        fields = '__all__'
+
+
+class RelationshipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Relationship
         fields = '__all__'
