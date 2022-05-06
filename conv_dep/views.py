@@ -7,7 +7,17 @@ from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 
 from conv_dep.models import Utterance, Conv, Relation, Relationship
-from conv_dep.serializer import ConvDepSerializer, ConvDepIdSerializer, RelationSerializer, RelationshipSerializer
+from conv_dep.serializer import ConvSerializer, ConvDepSerializer, RelationSerializer, RelationshipSerializer
+
+
+class ConvViewSet(viewsets.ModelViewSet):
+    queryset = Conv.objects.all()
+    serializer_class = ConvSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.queryset.filter(tagged=False)  # 检索未标注的数据
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data[0])  # 返回第一个
 
 
 class ConvDepViewSet(viewsets.ModelViewSet):
@@ -16,8 +26,8 @@ class ConvDepViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         conv_id = request.query_params.get('convId', None)
-        self.queryset = self.queryset.filter(conv=conv_id) 
-        serializer = self.serializer_class(self.queryset, many=True)
+        queryset = self.queryset.filter(conv=conv_id) 
+        serializer = self.serializer_class(queryset, many=True)
 
         data = serializer.data
         utr_id_set, utr_lst = {}, []
@@ -35,15 +45,6 @@ class ConvDepViewSet(viewsets.ModelViewSet):
                     'word': d['word']
                 })
         return Response(utr_lst)
-
-
-class ConvDepIdsViewSet(viewsets.ModelViewSet):
-    queryset = Conv.objects.all()
-    serializer_class = ConvDepIdSerializer
-
-    def list(self, request, *args, **kwargs):
-        serializer = self.serializer_class(self.queryset, many=True)
-        return Response(serializer.data[0])  # 返回第一个
 
 
 class RelationViewSet(viewsets.ModelViewSet):
