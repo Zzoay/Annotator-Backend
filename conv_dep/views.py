@@ -15,9 +15,13 @@ class ConvViewSet(viewsets.ModelViewSet):
     serializer_class = ConvSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset = self.queryset.filter(tagged=False)  # 检索未标注的数据
-        serializer = self.serializer_class(queryset, many=True)
-        return Response(serializer.data[0])  # 返回第一个
+        try:
+            queryset = self.queryset.filter(tagged=False)  # 检索未标注的数据
+            serializer = self.serializer_class(queryset, many=True)
+            return Response(serializer.data[0])  # 返回第一个
+        except IndexError:  # 如果全都已标注，则返回最后一个
+            serializer = self.serializer_class(self.queryset, many=True)
+            return Response(serializer.data[-1]) 
 
 
 class ConvDepViewSet(viewsets.ModelViewSet):
@@ -50,7 +54,6 @@ class ConvDepViewSet(viewsets.ModelViewSet):
 class RelationViewSet(viewsets.ModelViewSet):
     queryset = Relation.objects.all()
     serializer_class = RelationSerializer
-
 
 
 class RelationshipViewSet(viewsets.ModelViewSet):

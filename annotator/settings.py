@@ -26,7 +26,7 @@ SECRET_KEY = '_lg#w+xi6hmnmyjiv(f18vq!u$8!yp%te7yq#y(3^4(%(x0&r$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS:list = []
 
 
 # Application definition
@@ -39,10 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'common',
+
     'conv_dep',
     'rest_framework',
     'corsheaders',
 ]
+
+# User
+AUTH_USER_MODEL = 'common.User'
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -136,3 +142,13 @@ STATIC_URL = '/dist/assets/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'dist/assets'),
 ]
+
+
+REST_FRAMEWORK = {
+  'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+  'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
