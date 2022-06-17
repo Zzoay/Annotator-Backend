@@ -4,7 +4,7 @@ from django.db import models
 # 对话表
 class Conv(models.Model):
     conv_id = models.BigIntegerField(primary_key=True)
-    tagged = models.BooleanField(default=False)  # 是否已标注，默认False
+    status = models.IntegerField(default=0)  # 0默认状态，1已标注，2异常
 
 
 # 句子表，将词语信息也加入其中，减少外键依赖，通过程序进行约束

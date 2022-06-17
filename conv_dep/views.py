@@ -16,7 +16,7 @@ class ConvViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         try:
-            queryset = self.queryset.filter(tagged=False)  # 检索未标注的数据
+            queryset = self.queryset.filter(status=0)  # 检索未标注的数据
             serializer = self.serializer_class(queryset, many=True)
             return Response(serializer.data[0])  # 返回第一个
         except IndexError:  # 如果全都已标注，则返回最后一个
