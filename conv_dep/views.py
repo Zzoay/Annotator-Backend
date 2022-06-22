@@ -1,13 +1,14 @@
 import re
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
+from regex import W
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 
-from conv_dep.models import Utterance, Conv, Relation, Relationship
-from conv_dep.serializer import ConvSerializer, ConvDepSerializer, RelationSerializer, RelationshipSerializer
+from conv_dep.models import Utterance, Conv, Relation, Relationship, Word
+from conv_dep.serializer import ConvSerializer, ConvDepSerializer, RelationSerializer, RelationshipSerializer, WordSerializer
 
 
 class ConvViewSet(viewsets.ModelViewSet):
@@ -22,6 +23,15 @@ class ConvViewSet(viewsets.ModelViewSet):
         except IndexError:  # 如果全都已标注，则返回最后一个
             serializer = self.serializer_class(self.queryset, many=True)
             return Response(serializer.data[-1]) 
+    
+    # 通过many=True直接改造原有的API，使其可以批量创建
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        kwargs.setdefault('context', self.get_serializer_context())
+        if isinstance(self.request.data, list):
+            return serializer_class(many=True, *args, **kwargs)
+        else:
+            return serializer_class(*args, **kwargs)
 
 
 class ConvDepViewSet(viewsets.ModelViewSet):
@@ -49,6 +59,14 @@ class ConvDepViewSet(viewsets.ModelViewSet):
                     'word': d['word']
                 })
         return Response(utr_lst)
+    
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        kwargs.setdefault('context', self.get_serializer_context())
+        if isinstance(self.request.data, list):
+            return serializer_class(many=True, *args, **kwargs)
+        else:
+            return serializer_class(*args, **kwargs)
 
 
 class RelationViewSet(viewsets.ModelViewSet):
@@ -71,3 +89,16 @@ class RelationshipViewSet(viewsets.ModelViewSet):
         instance.relation = validated_data['relation']
         instance.save()
         return instance
+
+
+class WordViewSet(viewsets.ModelViewSet):
+    queryset = Word.objects.all()
+    serializer_class = WordSerializer
+
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        kwargs.setdefault('context', self.get_serializer_context())
+        if isinstance(self.request.data, list):
+            return serializer_class(many=True, *args, **kwargs)
+        else:
+            return serializer_class(*args, **kwargs)

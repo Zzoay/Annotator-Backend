@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 
-from conv_dep.models import Utterance, Conv, Relation, Relationship
+from conv_dep.models import Utterance, Conv, Relation, Relationship, Word
 
 
 class ConvSerializer(serializers.ModelSerializer):
@@ -11,11 +11,11 @@ class ConvSerializer(serializers.ModelSerializer):
 
 
 class ConvDepSerializer(serializers.ModelSerializer):
-    conv_id = serializers.IntegerField(source='conv.id', read_only=True)
+    # conv_id = serializers.IntegerField(source='conv.id')
 
     class Meta:
         model = Utterance
-        fields = ('conv_id', 'utr_id', 'word_id', 'word')
+        fields = '__all__'
 
 
 class RelationSerializer(serializers.ModelSerializer):
@@ -28,3 +28,9 @@ class RelationshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Relationship
         fields = '__all__'
+
+
+class WordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Word
+        fields ='__all__'

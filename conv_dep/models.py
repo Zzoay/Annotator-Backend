@@ -1,10 +1,18 @@
-from django.db import models
+from django.db import models, connection
+
 
 
 # 对话表
 class Conv(models.Model):
     conv_id = models.BigIntegerField(primary_key=True)
     status = models.IntegerField(default=0)  # 0默认状态，1已标注，2异常
+    set = models.CharField(max_length=8)
+    
+    @classmethod
+    def truncate(cls):
+        with connection.cursor() as cursor:
+            cursor.execute('DELETE FROM {0}'.format(cls._meta.db_table))
+            cursor.execute("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='{0}'".format(cls._meta.db_table))
 
 
 # 句子表，将词语信息也加入其中，减少外键依赖，通过程序进行约束
@@ -20,6 +28,12 @@ class Utterance(models.Model):
 
     def __str__(self):
         return f"对话ID: {self.conv.conv_id}; 话语ID: {self.utr_id}; 词: {self.word} "
+    
+    @classmethod
+    def truncate(cls):
+        with connection.cursor() as cursor:
+            cursor.execute('DELETE FROM {0}'.format(cls._meta.db_table))
+            cursor.execute("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='{0}'".format(cls._meta.db_table))
 
 
 # 词表
@@ -28,6 +42,12 @@ class Word(models.Model):
 
     def __str__(self):
         return f"ID: {self.id}; 词: {self.word}"
+    
+    @classmethod
+    def truncate(cls):
+        with connection.cursor() as cursor:
+            cursor.execute('DELETE FROM {0}'.format(cls._meta.db_table))
+            cursor.execute("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='{0}'".format(cls._meta.db_table))
 
 
 # 关系表

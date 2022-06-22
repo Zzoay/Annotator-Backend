@@ -10,6 +10,7 @@ router.register('conv', views.ConvViewSet)
 router.register('conv_dep', views.ConvDepViewSet)
 router.register('relation', views.RelationViewSet)
 router.register('relationship', views.RelationshipViewSet)
+router.register('word', views.WordViewSet)
 
 
 urlpatterns = [
