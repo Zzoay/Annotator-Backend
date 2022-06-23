@@ -50,7 +50,7 @@ class Process(models.Model):
 # 进程分配
 class ProcessAssignment(models.Model):
     process = models.ForeignKey('Process', on_delete=models.CASCADE)
-    item_id = models.IntegerField(verbose_name='Item ID')   # 根据标注粒度，比如对话标注中第N个对话的id
+    item_id = models.BigIntegerField(verbose_name='Item ID')   # 根据标注粒度，比如对话标注中第N个对话的id
     status = models.IntegerField('状态', default=0)   # 单个标注任务的状态，0: 初始化, 1: 已开始, 2: 已完成, 3: 已取消, 4: 保留
     created_at = models.DateTimeField(verbose_name='Created at', auto_now_add=True)
     modified_at = models.DateTimeField(verbose_name='Modified at', auto_now=True)
