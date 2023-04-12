@@ -12,7 +12,7 @@ def assign_process(item_ids):
     process_url = "http://localhost:8000/api/process/"
     res = requests.post(process_url, data={
         'task': 1,
-        'user': 4,
+        'user': 7,  # 7: jgy, 8: nwl
         'assign_num': len(item_ids),
         'finished_num': 0
     })
@@ -30,5 +30,5 @@ def assign_process(item_ids):
 
 
 if __name__ == "__main__":
-    item_ids = list(range(11, 21))
+    item_ids = list(range(851, 901))
     assign_process(item_ids)

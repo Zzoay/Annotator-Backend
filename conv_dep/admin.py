@@ -1,5 +1,5 @@
 from django.contrib import admin
-from conv_dep.models import Conv, Utterance, Word, Relation, Relationship
+from conv_dep.models import *
 
 # Register your models here.
 admin.site.register(Conv)

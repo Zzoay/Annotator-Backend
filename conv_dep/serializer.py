@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 
-from conv_dep.models import Utterance, Conv, Relation, Relationship, Word
+from conv_dep.models import *
 
 
 class ConvSerializer(serializers.ModelSerializer):

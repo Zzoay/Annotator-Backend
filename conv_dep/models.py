@@ -52,6 +52,7 @@ class Word(models.Model):
 
 # 关系表
 class Relation(models.Model):
+    tag = models.CharField(max_length=10)
     name = models.CharField(max_length=10)
     color = models.CharField(max_length=8)
 
@@ -68,3 +69,9 @@ class Relationship(models.Model):
 
     def __str__(self):
         return f"对话: {self.conv.conv_id}; 关系: {self.head}---{self.relation.name}-->{self.tail}"
+
+    @classmethod
+    def truncate(cls):
+        with connection.cursor() as cursor:
+            cursor.execute('DELETE FROM {0}'.format(cls._meta.db_table))
+            cursor.execute("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='{0}'".format(cls._meta.db_table))

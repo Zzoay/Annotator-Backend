@@ -26,8 +26,7 @@ SECRET_KEY = '_lg#w+xi6hmnmyjiv(f18vq!u$8!yp%te7yq#y(3^4(%(x0&r$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS:list = []
-
+ALLOWED_HOSTS:list = ['*']
 
 # Application definition
 
@@ -150,5 +149,5 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
   'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 60
 }

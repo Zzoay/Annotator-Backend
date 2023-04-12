@@ -7,8 +7,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 
-from conv_dep.models import Utterance, Conv, Relation, Relationship, Word
-from conv_dep.serializer import ConvSerializer, ConvDepSerializer, RelationSerializer, RelationshipSerializer, WordSerializer
+from conv_dep.models import *
+from conv_dep.serializer import *
 
 
 class ConvViewSet(viewsets.ModelViewSet):
@@ -85,10 +85,18 @@ class RelationshipViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
     
-    def update(self, instance, validated_data):
-        instance.relation = validated_data['relation']
-        instance.save()
-        return instance
+    # def update(self, instance, validated_data, pk):
+    #     instance.relation = validated_data['relation']
+    #     instance.save()
+    #     return instance
+    
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        kwargs.setdefault('context', self.get_serializer_context())
+        if isinstance(self.request.data, list):
+            return serializer_class(many=True, *args, **kwargs)
+        else:
+            return serializer_class(*args, **kwargs)
 
 
 class WordViewSet(viewsets.ModelViewSet):
